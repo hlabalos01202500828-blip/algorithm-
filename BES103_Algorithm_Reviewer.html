@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BES 103 — Algorithm Development Reviewer</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lora:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b0d14;--surface:#12151f;--card:#1a1e2e;--border:#252a3d;
+  --gold:#e8b84b;--gold2:#f5d06e;--teal:#3ecfb2;--red:#e85d5d;
+  --blue:#5b8af5;--text:#e8e4d8;--muted:#7a7d8e;--white:#f5f0e8;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Lora',serif;min-height:100vh;overflow-x:hidden}
+
+/* ---- HEADER ---- */
+header{background:linear-gradient(135deg,#0d1117 0%,#131830 50%,#0d1117 100%);border-bottom:1px solid var(--border);padding:28px 40px;position:relative;overflow:hidden}
+header::before{content:'';position:absolute;top:-60px;right:-60px;width:300px;height:300px;background:radial-gradient(circle,rgba(232,184,75,.12) 0%,transparent 70%);pointer-events:none}
+header::after{content:'⬡ ⬡ ⬡';position:absolute;bottom:8px;right:40px;font-size:10px;color:rgba(232,184,75,.15);letter-spacing:8px}
+.header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:24px}
+.logo-badge{width:54px;height:54px;background:linear-gradient(135deg,var(--gold),var(--gold2));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;box-shadow:0 4px 20px rgba(232,184,75,.3)}
+.header-text h1{font-family:'Playfair Display',serif;font-size:1.9rem;color:var(--gold2);letter-spacing:-.5px}
+.header-text p{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--muted);margin-top:3px}
+.badge{display:inline-block;background:rgba(232,184,75,.15);color:var(--gold);border:1px solid rgba(232,184,75,.3);border-radius:20px;padding:2px 10px;font-size:.7rem;font-family:'JetBrains Mono',monospace;margin-left:12px;vertical-align:middle}
+
+/* ---- TABS ---- */
+.tabs-bar{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;overflow-x:auto}
+.tabs-bar::-webkit-scrollbar{height:3px}
+.tabs-bar::-webkit-scrollbar-track{background:var(--surface)}
+.tabs-bar::-webkit-scrollbar-thumb{background:var(--border)}
+.tabs-inner{display:flex;max-width:1200px;margin:0 auto;padding:0 20px}
+.tab-btn{background:none;border:none;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:.75rem;padding:14px 18px;cursor:pointer;white-space:nowrap;position:relative;transition:color .2s;letter-spacing:.5px;text-transform:uppercase}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{color:var(--gold)}
+.tab-btn.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--gold)}
+.tab-btn.highlight{color:var(--teal) !important}
+.tab-btn.highlight.active::after{background:var(--teal)}
+
+/* ---- MAIN CONTENT ---- */
+main{max-width:1200px;margin:0 auto;padding:40px 24px}
+.tab-panel{display:none;animation:fadeIn .3s ease}
+.tab-panel.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ---- SECTION HEADING ---- */
+.section-heading{margin-bottom:32px}
+.section-heading h2{font-family:'Playfair Display',serif;font-size:2rem;color:var(--white)}
+.section-heading p{color:var(--muted);margin-top:6px;font-size:.9rem}
+.accent-line{width:48px;height:3px;background:var(--gold);margin-top:10px;border-radius:2px}
+.accent-line.teal{background:var(--teal)}
+
+/* ---- CARDS ---- */
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:20px}
+.card h3{font-family:'Playfair Display',serif;color:var(--gold2);margin-bottom:12px;font-size:1.2rem}
+.card.teal-card h3{color:var(--teal)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+@media(max-width:768px){.grid2,.grid3{grid-template-columns:1fr}}
+
+/* KEY POINT BULLETS */
+.kp{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
+.kp-dot{width:8px;height:8px;min-width:8px;background:var(--gold);border-radius:50%;margin-top:6px}
+.kp-dot.teal{background:var(--teal)}
+.kp-dot.blue{background:var(--blue)}
+
+/* CODE BLOCK */
+pre,code{font-family:'JetBrains Mono',monospace}
+.code-block{background:#0d1117;border:1px solid var(--border);border-radius:10px;padding:20px;overflow-x:auto;font-size:.82rem;line-height:1.7}
+.code-block .kw{color:var(--gold)}
+.code-block .op{color:var(--teal)}
+.code-block .cm{color:var(--muted)}
+.code-block .num{color:#a78bfa}
+.code-block .str{color:#86efac}
+
+/* PHASE BOXES */
+.phase{background:linear-gradient(135deg,rgba(91,138,245,.1),rgba(91,138,245,.05));border:1px solid rgba(91,138,245,.3);border-radius:12px;padding:20px;margin-bottom:12px}
+.phase-num{font-family:'Playfair Display',serif;font-size:2.5rem;color:rgba(91,138,245,.3);font-weight:900;line-height:1}
+.phase-title{color:var(--blue);font-size:1rem;font-weight:600;margin-bottom:6px}
+
+/* CONCEPT MAP */
+.concept-map{display:flex;flex-direction:column;align-items:center;gap:0;margin:20px 0}
+.cm-node{background:var(--card);border:2px solid var(--gold);border-radius:10px;padding:10px 20px;text-align:center;font-size:.85rem;color:var(--gold2);font-weight:600;position:relative;z-index:1}
+.cm-node.child{border-color:var(--teal);color:var(--teal);font-size:.8rem;padding:8px 16px}
+.cm-node.leaf{border-color:var(--muted);color:var(--text);font-size:.75rem;padding:6px 14px}
+.cm-arrow{width:2px;height:28px;background:var(--border);margin:0 auto}
+.cm-row{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.cm-line{width:100%;height:1px;background:var(--border);margin:4px 0}
+
+/* ═══════════════════════════════════════
+   FLOWCHART SECTION
+═══════════════════════════════════════ */
+.flowchart-container{background:#0d1117;border:1px solid var(--border);border-radius:14px;padding:24px;overflow:auto}
+.flowchart-tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.fc-tab{background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:8px 16px;border-radius:8px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:.75rem;transition:all .2s}
+.fc-tab.active{background:rgba(62,207,178,.15);border-color:var(--teal);color:var(--teal)}
+.fc-panel{display:none}
+.fc-panel.active{display:flex;gap:32px;align-items:flex-start;flex-wrap:wrap}
+svg.flowchart{width:280px;min-width:260px}
+.fc-code{flex:1;min-width:260px}
+
+/* SVG flowchart styles */
+.fc-shape{fill:var(--card);stroke:var(--teal);stroke-width:2;transition:fill .3s}
+.fc-shape.start{fill:rgba(62,207,178,.15);stroke:var(--teal)}
+.fc-shape.process{fill:rgba(91,138,245,.12);stroke:var(--blue)}
+.fc-shape.decision{fill:rgba(232,184,75,.12);stroke:var(--gold)}
+.fc-shape.output{fill:rgba(232,93,93,.12);stroke:var(--red)}
+.fc-shape.input{fill:rgba(62,207,178,.08);stroke:var(--teal)}
+.fc-text{fill:var(--text);font-family:'JetBrains Mono',monospace;font-size:10px;text-anchor:middle;dominant-baseline:middle}
+.fc-text.small{font-size:9px}
+.fc-arrow{stroke:var(--border);stroke-width:1.5;fill:none;marker-end:url(#arr)}
+.fc-label{fill:var(--muted);font-family:'JetBrains Mono',monospace;font-size:9px;text-anchor:middle}
+
+.step-btn{background:rgba(62,207,178,.1);border:1px solid var(--teal);color:var(--teal);padding:8px 16px;border-radius:8px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:.78rem;margin-right:8px;transition:all .2s}
+.step-btn:hover{background:rgba(62,207,178,.25)}
+.step-info{background:rgba(62,207,178,.08);border:1px solid rgba(62,207,178,.2);border-radius:8px;padding:12px;margin-top:12px;font-size:.85rem;min-height:50px;color:var(--teal)}
+
+/* SYMBOL TABLE */
+.sym-table{width:100%;border-collapse:collapse;font-size:.85rem}
+.sym-table th{background:rgba(232,184,75,.1);color:var(--gold);padding:10px 14px;text-align:left;border-bottom:2px solid rgba(232,184,75,.3);font-family:'JetBrains Mono',monospace;font-size:.78rem}
+.sym-table td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
+.sym-table tr:hover td{background:rgba(255,255,255,.03)}
+.sym-preview{display:flex;align-items:center;justify-content:center}
+
+/* ═══════════════════════════════════════
+   FLASHCARDS
+═══════════════════════════════════════ */
+.flashcard-area{perspective:1000px;max-width:600px;margin:0 auto}
+.flashcard{width:100%;height:220px;cursor:pointer;position:relative;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,0,.2,1)}
+.flashcard.flipped{transform:rotateY(180deg)}
+.fc-front,.fc-back{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;text-align:center}
+.fc-front{background:linear-gradient(135deg,#1a1e2e,#1f2540);border:2px solid var(--gold)}
+.fc-front h3{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--gold2)}
+.fc-front p{color:var(--muted);font-size:.8rem;margin-top:8px}
+.fc-back{background:linear-gradient(135deg,#0f1a1a,#0d1a22);border:2px solid var(--teal);transform:rotateY(180deg)}
+.fc-back p{color:var(--white);font-size:.95rem;line-height:1.6}
+.fc-nav{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:20px}
+.fc-nav-btn{background:var(--card);border:1px solid var(--border);color:var(--text);padding:10px 24px;border-radius:8px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:.8rem;transition:all .2s}
+.fc-nav-btn:hover{border-color:var(--gold);color:var(--gold)}
+.fc-counter{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--muted)}
+.fc-progress{width:100%;height:4px;background:var(--border);border-radius:2px;margin-top:12px;overflow:hidden}
+.fc-progress-bar{height:100%;background:var(--gold);border-radius:2px;transition:width .3s}
+.flip-hint{font-size:.75rem;color:var(--muted);text-align:center;margin-top:8px}
+
+/* ═══════════════════════════════════════
+   QUIZ
+═══════════════════════════════════════ */
+.quiz-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px}
+.quiz-score-box{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 20px;font-family:'JetBrains Mono',monospace}
+.quiz-score-box .score-num{font-size:1.8rem;font-weight:700;color:var(--gold)}
+.quiz-score-box .score-label{font-size:.7rem;color:var(--muted)}
+.quiz-progress-wrap{flex:1;min-width:200px}
+.quiz-progress-bar-outer{width:100%;height:8px;background:var(--border);border-radius:4px;overflow:hidden;margin-top:6px}
+.quiz-progress-bar-inner{height:100%;background:linear-gradient(90deg,var(--teal),var(--blue));border-radius:4px;transition:width .3s}
+.q-num{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--muted);margin-bottom:8px}
+.q-text{font-size:1rem;color:var(--white);margin-bottom:18px;line-height:1.6}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+@media(max-width:600px){.options{grid-template-columns:1fr}}
+.option-btn{background:var(--card);border:2px solid var(--border);color:var(--text);padding:12px 16px;border-radius:10px;cursor:pointer;text-align:left;font-size:.88rem;font-family:'Lora',serif;transition:all .2s;line-height:1.4}
+.option-btn:hover:not(:disabled){border-color:var(--blue);background:rgba(91,138,245,.08)}
+.option-btn.correct{border-color:var(--teal)!important;background:rgba(62,207,178,.15)!important;color:var(--teal)!important}
+.option-btn.wrong{border-color:var(--red)!important;background:rgba(232,93,93,.12)!important;color:var(--red)!important}
+.option-btn:disabled{cursor:default}
+.feedback{padding:12px 16px;border-radius:8px;font-size:.88rem;margin-bottom:14px;min-height:44px}
+.feedback.correct{background:rgba(62,207,178,.1);border:1px solid rgba(62,207,178,.3);color:var(--teal)}
+.feedback.wrong{background:rgba(232,93,93,.1);border:1px solid rgba(232,93,93,.3);color:var(--red)}
+.next-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#0d1117;border:none;padding:12px 28px;border-radius:10px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:.82rem;font-weight:600;transition:all .2s}
+.next-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(232,184,75,.35)}
+.next-btn:disabled{opacity:.4;cursor:default;transform:none}
+.result-panel{text-align:center;padding:40px 20px}
+.result-panel .big-score{font-family:'Playfair Display',serif;font-size:5rem;color:var(--gold2)}
+.result-panel .grade-label{font-family:'JetBrains Mono',monospace;color:var(--teal);font-size:1.2rem;margin:8px 0}
+.result-panel .restart-btn{background:var(--card);border:2px solid var(--gold);color:var(--gold);padding:12px 28px;border-radius:10px;cursor:pointer;font-family:'JetBrains Mono',monospace;margin-top:20px;font-size:.85rem;transition:all .2s}
+.result-panel .restart-btn:hover{background:rgba(232,184,75,.1)}
+
+/* ═══════════════════════════════════════
+   GAME
+═══════════════════════════════════════ */
+.game-area{max-width:600px;margin:0 auto;text-align:center}
+.game-board{background:#0d1117;border:2px solid var(--border);border-radius:16px;padding:32px;margin-bottom:20px;min-height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px}
+.shape-display svg{width:140px;height:100px}
+.game-choices{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
+.game-choice{background:var(--card);border:2px solid var(--border);color:var(--text);padding:14px;border-radius:10px;cursor:pointer;font-family:'Lora',serif;font-size:.9rem;transition:all .2s}
+.game-choice:hover{border-color:var(--gold);color:var(--gold)}
+.game-choice.correct-ans{border-color:var(--teal)!important;background:rgba(62,207,178,.15)!important;color:var(--teal)!important;animation:pulse .3s ease}
+.game-choice.wrong-ans{border-color:var(--red)!important;background:rgba(232,93,93,.1)!important;color:var(--red)!important}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+.game-stats{display:flex;gap:20px;justify-content:center;flex-wrap:wrap}
+.stat-box{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 20px;text-align:center;font-family:'JetBrains Mono',monospace}
+.stat-box .val{font-size:1.8rem;font-weight:700;color:var(--gold)}
+.stat-box .lbl{font-size:.7rem;color:var(--muted)}
+.game-timer{font-family:'JetBrains Mono',monospace;font-size:1.4rem;color:var(--teal);background:rgba(62,207,178,.1);border:1px solid rgba(62,207,178,.3);border-radius:8px;padding:6px 16px}
+.start-game-btn{background:linear-gradient(135deg,var(--teal),#2ba891);color:#0d1117;border:none;padding:14px 32px;border-radius:12px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:.9rem;font-weight:700;transition:all .2s;margin-top:12px}
+.start-game-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(62,207,178,.3)}
+.game-prompt{color:var(--muted);font-size:.9rem}
+
+/* ALERT */
+.info-alert{background:rgba(232,184,75,.08);border:1px solid rgba(232,184,75,.25);border-radius:10px;padding:14px 18px;margin-bottom:20px;font-size:.88rem;color:var(--gold2)}
+.info-alert strong{color:var(--gold)}
+
+/* RESPONSIVE */
+@media(max-width:600px){header{padding:20px}main{padding:24px 16px}.header-text h1{font-size:1.4rem}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo-badge">⚙️</div>
+    <div class="header-text">
+      <h1>BES 103 — Algorithm Development <span class="badge">2nd Sem 25–26</span></h1>
+      <p>University of Southeastern Philippines · College of Engineering · Electronics Engineering</p>
+    </div>
+  </div>
+</header>
+
+<div class="tabs-bar">
+  <div class="tabs-inner">
+    <button class="tab-btn active" onclick="switchTab('overview',this)">📘 Overview</button>
+    <button class="tab-btn" onclick="switchTab('algorithm',this)">🧠 Algorithm & Pseudocode</button>
+    <button class="tab-btn highlight" onclick="switchTab('flowchart',this)">📊 Flowcharts ★</button>
+    <button class="tab-btn" onclick="switchTab('structures',this)">🔀 Control Structures</button>
+    <button class="tab-btn" onclick="switchTab('lab',this)">🔬 Lab 9 Guide</button>
+    <button class="tab-btn" onclick="switchTab('flashcards',this)">🃏 Flashcards</button>
+    <button class="tab-btn" onclick="switchTab('quiz',this)">📝 Quiz (75)</button>
+    <button class="tab-btn" onclick="switchTab('game',this)">🎮 Game</button>
+  </div>
+</div>
+
+<main>
+
+<!-- ══════════ OVERVIEW ══════════ -->
+<div class="tab-panel active" id="tab-overview">
+  <div class="section-heading">
+    <h2>Course Overview</h2>
+    <p>Quick summary of BES 103 Algorithm Development — key ideas at a glance</p>
+    <div class="accent-line"></div>
+  </div>
+
+  <div class="info-alert">
+    <strong>⭐ Exam Tip:</strong> Flowcharts and control structures are heavily tested. Know every symbol, every structure, and be able to trace through flowcharts step-by-step.
+  </div>
+
+  <div class="grid2">
+    <div>
+      <div class="card">
+        <h3>🎯 Learning Objectives</h3>
+        <div class="kp"><div class="kp-dot"></div><div>Analyze a problem and develop a solution</div></div>
+        <div class="kp"><div class="kp-dot"></div><div>Develop simple algorithms using the <strong style="color:var(--gold)">sequence control structure</strong></div></div>
+        <div class="kp"><div class="kp-dot"></div><div>Manually check (desk-trace) a developed solution</div></div>
+      </div>
+
+      <div class="card">
+        <h3>⚙️ Two Phases of Programming</h3>
+        <div class="phase">
+          <div class="phase-num">1</div>
+          <div class="phase-title">Problem-Solving Phase</div>
+          <p style="font-size:.88rem">Create an ordered sequence of steps (algorithm) that solves the problem. Pseudocode is used here.</p>
+        </div>
+        <div class="phase">
+          <div class="phase-num">2</div>
+          <div class="phase-title">Implementation Phase</div>
+          <p style="font-size:.88rem">Translate the algorithm into an actual programming language (C++, Python, etc.).</p>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <h3>🗺️ Concept Map</h3>
+        <div class="concept-map">
+          <div class="cm-node">Computer Programming Task</div>
+          <div class="cm-arrow"></div>
+          <div class="cm-row">
+            <div>
+              <div class="cm-node child">Problem-Solving Phase</div>
+              <div class="cm-arrow"></div>
+              <div class="cm-row">
+                <div class="cm-node leaf">Algorithm</div>
+                <div class="cm-node leaf">Pseudocode</div>
+                <div class="cm-node leaf">Flowchart</div>
+              </div>
+            </div>
+          </div>
+          <div class="cm-arrow"></div>
+          <div class="cm-row">
+            <div>
+              <div class="cm-node child">Implementation Phase</div>
+              <div class="cm-arrow"></div>
+              <div class="cm-node leaf">Programming Language</div>
+            </div>
+          </div>
+          <div class="cm-arrow"></div>
+          <div class="cm-node" style="border-color:var(--blue);color:var(--blue)">Control Structures</div>
+          <div class="cm-arrow"></div>
+          <div class="cm-row">
+            <div class="cm-node leaf">Sequence</div>
+            <div class="cm-node leaf">Decision</div>
+            <div class="cm-node leaf">Loop</div>
+            <div class="cm-node leaf">Case</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>⚡ 1-Minute Summary</h3>
+    <p style="line-height:1.8;font-size:.92rem">
+      Every programming task starts with <strong style="color:var(--gold)">problem analysis</strong>, not coding. First, you write an <strong style="color:var(--gold)">algorithm</strong> — an ordered list of steps. You can express this as <strong style="color:var(--teal)">pseudocode</strong> (English-like informal language) or as a <strong style="color:var(--teal)">flowchart</strong> (graphical version). Pseudocode is then refined into a detailed algorithm close to actual code. Flowcharts use specific shapes: <strong style="color:var(--blue)">ovals</strong> for start/stop, <strong style="color:var(--blue)">parallelograms</strong> for input, <strong style="color:var(--blue)">rectangles</strong> for processes, <strong style="color:var(--blue)">diamonds</strong> for decisions, and <strong style="color:var(--blue)">hybrid shapes</strong> for output. The four control structures are <strong style="color:var(--gold)">Sequence</strong> (top to bottom), <strong style="color:var(--gold)">Decision</strong> (if/else branches), <strong style="color:var(--gold)">Loop</strong> (repeat while condition), and <strong style="color:var(--gold)">Case</strong> (multi-branch).
+    </p>
+  </div>
+</div>
+
+<!-- ══════════ ALGORITHM & PSEUDOCODE ══════════ -->
+<div class="tab-panel" id="tab-algorithm">
+  <div class="section-heading">
+    <h2>Algorithm &amp; Pseudocode</h2>
+    <p>Understanding the building blocks before we write code</p>
+    <div class="accent-line"></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h3>📌 What is an Algorithm?</h3>
+      <div class="kp"><div class="kp-dot"></div><div>An <strong style="color:var(--gold)">ordered sequence of steps</strong> that solves a problem</div></div>
+      <div class="kp"><div class="kp-dot"></div><div>Created during the <strong style="color:var(--gold)">problem-solving phase</strong></div></div>
+      <div class="kp"><div class="kp-dot"></div><div>Must be precise, unambiguous, and finite</div></div>
+      <div class="kp"><div class="kp-dot"></div><div>Blueprint before actual coding begins</div></div>
+    </div>
+    <div class="card">
+      <h3>📌 What is Pseudocode?</h3>
+      <div class="kp"><div class="kp-dot teal"></div><div>An <strong style="color:var(--teal)">artificial and informal language</strong></div></div>
+      <div class="kp"><div class="kp-dot teal"></div><div>Helps programmers <strong style="color:var(--teal)">develop algorithms</strong></div></div>
+      <div class="kp"><div class="kp-dot teal"></div><div>Very similar to <strong style="color:var(--teal)">everyday English</strong></div></div>
+      <div class="kp"><div class="kp-dot teal"></div><div>Not executable — just for planning</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Steps in Problem Solving</h3>
+    <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap">
+      <div style="flex:1;min-width:200px">
+        <div class="kp"><div class="kp-dot"></div><div><strong>Step 1:</strong> Produce a general algorithm using pseudocode</div></div>
+        <div class="kp"><div class="kp-dot"></div><div><strong>Step 2:</strong> Refine the algorithm successively</div></div>
+        <div class="kp"><div class="kp-dot"></div><div><strong>Step 3:</strong> Get a step-by-step detailed algorithm close to a computer language</div></div>
+        <div class="kp"><div class="kp-dot"></div><div><strong>Step 4:</strong> Implement in actual programming language</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📖 Example 1 — Student Grade Checker</h3>
+    <p style="color:var(--muted);margin-bottom:16px;font-size:.88rem"><em>Write an algorithm to determine a student's final grade (average of 4 marks) and indicate PASSED or FAILED.</em></p>
+    <div class="grid2">
+      <div>
+        <p style="color:var(--gold);font-family:'JetBrains Mono',monospace;font-size:.78rem;margin-bottom:8px">PSEUDOCODE</p>
+        <div class="code-block">
+<span class="kw">Input</span> a set of 4 marks
+<span class="kw">Calculate</span> their average by summing
+  and dividing by <span class="num">4</span>
+
+<span class="kw">if</span> average is below <span class="num">75</span>
+    <span class="kw">Print</span> <span class="str">"FAILED"</span>
+<span class="kw">else</span>
+    <span class="kw">Print</span> <span class="str">"PASSED"</span>
+        </div>
+      </div>
+      <div>
+        <p style="color:var(--teal);font-family:'JetBrains Mono',monospace;font-size:.78rem;margin-bottom:8px">DETAILED ALGORITHM</p>
+        <div class="code-block">
+<span class="kw">Step 1:</span> <span class="op">Input</span> M1, M2, M3, M4
+<span class="kw">Step 2:</span> GRADE <span class="op">←</span> (M1+M2+M3+M4)<span class="op">/</span><span class="num">4</span>
+<span class="kw">Step 3:</span> <span class="kw">if</span> (GRADE <span class="op">&lt;</span> <span class="num">75</span>) <span class="kw">then</span>
+           <span class="kw">Print</span> <span class="str">"FAILED"</span>
+         <span class="kw">else</span>
+           <span class="kw">Print</span> <span class="str">"PASSED"</span>
+         <span class="kw">endif</span>
+<span class="cm">End of Program.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📖 Example 2 — Even or Odd Checker</h3>
+    <div class="code-block">
+<span class="kw">BEGIN</span>
+  <span class="kw">PRINT</span> <span class="str">"Enter a number: "</span>
+  <span class="kw">READ</span> number
+  Get number <span class="op">%</span> <span class="num">2</span> to get the remainder
+  <span class="kw">IF</span> Remainder <span class="op">is equal to</span> <span class="num">0</span> <span class="kw">THEN</span>
+      <span class="kw">PRINT</span> <span class="str">"EVEN."</span>
+  <span class="kw">else</span>
+      <span class="kw">PRINT</span> <span class="str">"ODD"</span>
+  <span class="kw">ENDIF</span>
+<span class="kw">END</span>
+    </div>
+    <div class="kp" style="margin-top:12px"><div class="kp-dot teal"></div><div>The <strong style="color:var(--teal)">% (modulo) operator</strong> returns the remainder of division. If remainder = 0 → EVEN; else → ODD</div></div>
+  </div>
+</div>
+
+<!-- ══════════ FLOWCHARTS ★ ══════════ -->
+<div class="tab-panel" id="tab-flowchart">
+  <div class="section-heading">
+    <h2>Flowcharts <span style="color:var(--teal)">★ Exam Highlight</span></h2>
+    <p>Graphical algorithm representation — know every symbol cold</p>
+    <div class="accent-line teal"></div>
+  </div>
+
+  <div class="info-alert" style="border-color:rgba(62,207,178,.3);background:rgba(62,207,178,.07);color:var(--teal)">
+    <strong>🎯 Priority Topic!</strong> Flowcharts are a major focus in BES 103. You must be able to: identify all symbols, trace through flowcharts, draw flowcharts from pseudocode, and apply all 4 control structures.
+  </div>
+
+  <!-- SYMBOL TABLE -->
+  <div class="card">
+    <h3>📐 Flowchart Symbols Reference</h3>
+    <table class="sym-table">
+      <thead><tr><th>Shape</th><th>Name</th><th>Use in Flowchart</th><th>Memory Tip</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><div class="sym-preview"><svg width="70" height="40"><ellipse cx="35" cy="20" rx="32" ry="16" fill="rgba(62,207,178,.15)" stroke="#3ecfb2" stroke-width="2"/><text x="35" y="21" font-size="9" fill="#e8e4d8" text-anchor="middle" dominant-baseline="middle" font-family="JetBrains Mono">START</text></svg></div></td>
+          <td><strong style="color:var(--teal)">Oval / Terminal</strong></td>
+          <td>Denotes the <strong>beginning or end</strong> of the program</td>
+          <td>🥚 "Egg = egg of life (start/end)"</td>
+        </tr>
+        <tr>
+          <td><div class="sym-preview"><svg width="70" height="40"><polygon points="8,32 20,8 62,8 50,32" fill="rgba(62,207,178,.08)" stroke="#3ecfb2" stroke-width="2"/><text x="35" y="21" font-size="8" fill="#e8e4d8" text-anchor="middle" dominant-baseline="middle" font-family="JetBrains Mono">INPUT</text></svg></div></td>
+          <td><strong style="color:var(--teal)">Parallelogram</strong></td>
+          <td>Denotes an <strong>input operation</strong> (reading data)</td>
+          <td>↗ "Slanted = data coming IN"</td>
+        </tr>
+        <tr>
+          <td><div class="sym-preview"><svg width="70" height="40"><rect x="6" y="8" width="58" height="26" fill="rgba(91,138,245,.12)" stroke="#5b8af5" stroke-width="2" rx="2"/><text x="35" y="21" font-size="8" fill="#e8e4d8" text-anchor="middle" dominant-baseline="middle" font-family="JetBrains Mono">PROCESS</text></svg></div></td>
+          <td><strong style="color:var(--blue)">Rectangle</strong></td>
+          <td>Denotes a <strong>process</strong> (add, subtract, assign value)</td>
+          <td>📦 "Box = do a job"</td>
+        </tr>
+        <tr>
+          <td><div class="sym-preview"><svg width="70" height="44"><polygon points="35,4 64,22 35,40 6,22" fill="rgba(232,184,75,.12)" stroke="#e8b84b" stroke-width="2"/><text x="35" y="22" font-size="8" fill="#e8e4d8" text-anchor="middle" dominant-baseline="middle" font-family="JetBrains Mono">YES/NO</text></svg></div></td>
+          <td><strong style="color:var(--gold)">Diamond</strong></td>
+          <td>Denotes a <strong>decision / branch</strong> (IF/THEN/ELSE) — two routes</td>
+          <td>💎 "Diamond = decide"</td>
+        </tr>
+        <tr>
+          <td><div class="sym-preview"><svg width="70" height="44"><polygon points="6,22 20,6 50,6 64,22 50,38 20,38" fill="rgba(232,93,93,.12)" stroke="#e85d5d" stroke-width="2"/><text x="35" y="22" font-size="8" fill="#e8e4d8" text-anchor="middle" dominant-baseline="middle" font-family="JetBrains Mono">OUTPUT</text></svg></div></td>
+          <td><strong style="color:var(--red)">Hybrid</strong></td>
+          <td>Denotes an <strong>output operation</strong> (print, display)</td>
+          <td>📤 "Cut corners = OUTPUT"</td>
+        </tr>
+        <tr>
+          <td><div class="sym-preview"><svg width="70" height="20"><line x1="5" y1="10" x2="55" y2="10" stroke="#7a7d8e" stroke-width="2"/><polygon points="55,6 65,10 55,14" fill="#7a7d8e"/></svg></div></td>
+          <td><strong style="color:var(--muted)">Flow Line / Arrow</strong></td>
+          <td>Denotes the <strong>direction of logic flow</strong></td>
+          <td>➡️ "Arrow = follow me"</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- FLOWCHART RULES -->
+  <div class="card teal-card">
+    <h3>📏 Flowchart Rules (Must Know!)</h3>
+    <div class="grid2">
+      <div>
+        <div class="kp"><div class="kp-dot teal"></div><div>Must have a <strong style="color:var(--teal)">START and STOP</strong></div></div>
+        <div class="kp"><div class="kp-dot teal"></div><div>All steps must <strong style="color:var(--teal)">connect</strong> — no hanging steps</div></div>
+        <div class="kp"><div class="kp-dot teal"></div><div>Shows <strong style="color:var(--teal)">logic solution</strong> graphically</div></div>
+      </div>
+      <div>
+        <div class="kp"><div class="kp-dot teal"></div><div>Emphasizes <strong style="color:var(--teal)">individual steps</strong> and their interconnections</div></div>
+        <div class="kp"><div class="kp-dot teal"></div><div>Control flow goes from one action to the next</div></div>
+        <div class="kp"><div class="kp-dot teal"></div><div>Diamond always has <strong style="color:var(--teal)">exactly 2 exits</strong> (Y/N)</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INTERACTIVE FLOWCHARTS -->
+  <div class="card">
+    <h3>🖥️ Interactive Flowcharts — Step Through</h3>
+    <div class="flowchart-tabs">
+      <button class="fc-tab active" onclick="switchFC('fc1',this)">Example 1: Grade Checker</button>
+      <button class="fc-tab" onclick="switchFC('fc2',this)">Example 2: Even / Odd</button>
+      <button class="fc-tab" onclick="switchFC('fc3',this)">Loop: Sum 1–9</button>
+    </div>
+
+    <!-- FC1: Grade -->
+    <div class="fc-panel active" id="fc-fc1">
+      <div class="flowchart-container" style="flex-shrink:0;padding:16px">
+        <svg class="flowchart" viewBox="0 0 240 520" id="svg-fc1">
+          <defs><marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#3a3f5c"/></marker></defs>
+          <!-- START -->
+          <ellipse cx="120" cy="36" rx="50" ry="22" class="fc-shape start" id="fc1-s0"/>
+          <text x="120" y="36" class="fc-text" id="fc1-t0">START</text>
+          <line x1="120" y1="58" x2="120" y2="88" class="fc-arrow"/>
+          <!-- INPUT -->
+          <polygon points="60,88 76,110 184,110 168,88" class="fc-shape input" id="fc1-s1"/>
+          <text x="122" y="95" class="fc-text small" id="fc1-t1">Input M1,M2,M3,M4</text>
+          <line x1="120" y1="110" x2="120" y2="140" class="fc-arrow"/>
+          <!-- PROCESS -->
+          <rect x="40" y="140" width="160" height="36" rx="3" class="fc-shape process" id="fc1-s2"/>
+          <text x="120" y="158" class="fc-text small" id="fc1-t2">GRADE=(M1+M2+M3+M4)/4</text>
+          <line x1="120" y1="176" x2="120" y2="210" class="fc-arrow"/>
+          <!-- DECISION -->
+          <polygon points="120,210 190,248 120,286 50,248" class="fc-shape decision" id="fc1-s3"/>
+          <text x="120" y="244" class="fc-text small" id="fc1-t3">GRADE</text>
+          <text x="120" y="256" class="fc-text small">&lt; 75 ?</text>
+          <!-- YES arrow right -->
+          <line x1="190" y1="248" x2="210" y2="248" class="fc-arrow"/>
+          <text x="198" y="242" class="fc-label">Y</text>
+          <!-- OUTPUT FAILED -->
+          <polygon points="210,232 224,248 210,264 196,248" style="fill:none;display:none"/>
+          <polygon points="195,232 230,232 230,264 195,264" style="fill:rgba(232,93,93,.12);stroke:#e85d5d;stroke-width:2" id="fc1-s4"/>
+          <text x="212" y="244" class="fc-text small" id="fc1-t4">PRINT</text>
+          <text x="212" y="256" class="fc-text small">"FAILED"</text>
+          <!-- NO arrow down -->
+          <line x1="120" y1="286" x2="120" y2="316" class="fc-arrow"/>
+          <text x="108" y="298" class="fc-label">N</text>
+          <!-- OUTPUT PASSED -->
+          <polygon points="195,316 230,316 230,348 195,348" style="fill:rgba(62,207,178,.12);stroke:#3ecfb2;stroke-width:2" id="fc1-s5"/>
+          <text x="212" y="326" class="fc-text small" id="fc1-t5">PRINT</text>
+          <text x="212" y="340" class="fc-text small">"PASSED"</text>
+          <!-- Correction: PASSED and FAILED both go to STOP -->
+          <!-- FAILED box -->
+          <polygon points="68,316 102,316 102,348 68,348" style="fill:rgba(232,93,93,.12);stroke:#e85d5d;stroke-width:2" id="fc1-s4b"/>
+          <text x="85" y="326" class="fc-text small" id="fc1-t4b">PRINT</text>
+          <text x="85" y="340" class="fc-text small">"FAILED"</text>
+          <!-- Y arrow to FAILED -->
+          <line x1="190" y1="248" x2="85" y2="248" style="display:none" class="fc-arrow"/>
+          <line x1="190" y1="248" x2="170" y2="248" class="fc-arrow"/>
+          <line x1="170" y1="248" x2="170" y2="332" class="fc-arrow"/>
+          <line x1="170" y1="332" x2="102" y2="332" class="fc-arrow"/>
+          <!-- N arrow down then PASSED -->
+          <line x1="120" y1="286" x2="120" y2="310" class="fc-arrow"/>
+          <line x1="120" y1="310" x2="68" y2="332" style="display:none"/>
+          <!-- PASSED on right -->
+          <polygon points="155,316 205,316 205,348 155,348" style="fill:rgba(62,207,178,.12);stroke:#3ecfb2;stroke-width:2" id="fc1-s5r"/>
+          <text x="180" y="326" class="fc-text small">PRINT</text>
+          <text x="180" y="340" class="fc-text small">"PASSED"</text>
+          <line x1="120" y1="310" x2="155" y2="332" style="display:none"/>
+          <!-- Lines to STOP -->
+          <line x1="85" y1="348" x2="85" y2="400" class="fc-arrow"/>
+          <line x1="180" y1="348" x2="180" y2="400" class="fc-arrow"/>
+          <line x1="85" y1="400" x2="180" y2="400" class="fc-arrow"/>
+          <line x1="132" y1="400" x2="132" y2="428" class="fc-arrow"/>
+          <!-- STOP -->
+          <ellipse cx="132" cy="450" rx="50" ry="22" class="fc-shape start" id="fc1-s6"/>
+          <text x="132" y="450" class="fc-text" id="fc1-t6">STOP</text>
+        </svg>
+      </div>
+      <div class="fc-code" style="flex:1;min-width:220px">
+        <div class="code-block" style="margin-bottom:16px">
+<span class="kw">Step 1:</span> <span class="op">Input</span> M1, M2, M3, M4
+<span class="kw">Step 2:</span> GRADE <span class="op">←</span> (M1+M2+M3+M4)<span class="op">/</span>4
+<span class="kw">Step 3:</span> <span class="kw">if</span> (GRADE <span class="op">&lt;</span> 75) <span class="kw">then</span>
+           <span class="kw">Print</span> <span class="str">"FAILED"</span>
+         <span class="kw">else</span>
+           <span class="kw">Print</span> <span class="str">"PASSED"</span>
+         <span class="kw">endif</span>
+        </div>
+        <p style="color:var(--muted);font-size:.82rem;margin-bottom:12px">🧪 <em>Trace with sample: M1=80, M2=70, M3=90, M4=60</em></p>
+        <div class="step-info" id="trace-fc1">
+          GRADE = (80+70+90+60)/4 = <strong style="color:var(--gold)">75</strong><br>
+          IS 75 &lt; 75? → <strong style="color:var(--teal)">NO</strong><br>
+          Result: <strong style="color:var(--teal)">PASSED ✓</strong>
+        </div>
+        <div style="margin-top:12px">
+          <p style="color:var(--muted);font-size:.82rem;margin-bottom:8px">Try another trace:</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="step-btn" onclick="traceGrade(70,65,60,55)">Trace: 70,65,60,55</button>
+            <button class="step-btn" onclick="traceGrade(80,85,90,75)">Trace: 80,85,90,75</button>
+            <button class="step-btn" onclick="traceGrade(75,75,75,75)">Trace: 75,75,75,75</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FC2: Even/Odd -->
+    <div class="fc-panel" id="fc-fc2">
+      <div class="flowchart-container" style="flex-shrink:0;padding:16px">
+        <svg class="flowchart" viewBox="0 0 240 560" id="svg-fc2">
+          <defs><marker id="arr2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#3a3f5c"/></marker></defs>
+          <ellipse cx="120" cy="36" rx="50" ry="22" class="fc-shape start"/>
+          <text x="120" y="36" class="fc-text">START</text>
+          <line x1="120" y1="58" x2="120" y2="88" class="fc-arrow"/>
+          <!-- Print prompt -->
+          <polygon points="68,88 76,108 164,108 172,88" style="fill:rgba(232,93,93,.12);stroke:#e85d5d;stroke-width:2"/>
+          <text x="120" y="95" class="fc-text small">Print "Enter a</text>
+          <text x="120" y="105" class="fc-text small">number:"</text>
+          <line x1="120" y1="108" x2="120" y2="138" class="fc-arrow"/>
+          <!-- INPUT -->
+          <polygon points="60,138 76,160 184,160 168,138" class="fc-shape input"/>
+          <text x="122" y="148" class="fc-text small">Input number</text>
+          <line x1="120" y1="160" x2="120" y2="190" class="fc-arrow"/>
+          <!-- PROCESS -->
+          <rect x="40" y="190" width="160" height="34" rx="3" class="fc-shape process"/>
+          <text x="120" y="207" class="fc-text small">Remainder = number % 2</text>
+          <line x1="120" y1="224" x2="120" y2="256" class="fc-arrow"/>
+          <!-- DECISION -->
+          <polygon points="120,256 190,292 120,328 50,292" class="fc-shape decision"/>
+          <text x="120" y="288" class="fc-text small">Remainder</text>
+          <text x="120" y="300" class="fc-text small">= 0 ?</text>
+          <!-- YES right -->
+          <line x1="190" y1="292" x2="215" y2="292" class="fc-arrow"/>
+          <text x="200" y="286" class="fc-label">Y</text>
+          <polygon points="195,276 235,276 235,308 195,308" style="fill:rgba(62,207,178,.12);stroke:#3ecfb2;stroke-width:2"/>
+          <text x="215" y="288" class="fc-text small">PRINT</text>
+          <text x="215" y="300" class="fc-text small">"EVEN"</text>
+          <!-- NO left -->
+          <line x1="50" y1="292" x2="25" y2="292" class="fc-arrow"/>
+          <text x="35" y="286" class="fc-label">N</text>
+          <polygon points="5,276 45,276 45,308 5,308" style="fill:rgba(232,93,93,.12);stroke:#e85d5d;stroke-width:2"/>
+          <text x="25" y="288" class="fc-text small">PRINT</text>
+          <text x="25" y="300" class="fc-text small">"ODD"</text>
+          <!-- converge -->
+          <line x1="25" y1="308" x2="25" y2="380" class="fc-arrow"/>
+          <line x1="215" y1="308" x2="215" y2="380" class="fc-arrow"/>
+          <line x1="25" y1="380" x2="215" y2="380" class="fc-arrow"/>
+          <line x1="120" y1="380" x2="120" y2="410" class="fc-arrow"/>
+          <ellipse cx="120" cy="432" rx="50" ry="22" class="fc-shape start"/>
+          <text x="120" y="432" class="fc-text">STOP</text>
+        </svg>
+      </div>
+      <div class="fc-code" style="flex:1;min-width:220px">
+        <div class="code-block" style="margin-bottom:16px">
+<span class="kw">BEGIN</span>
+  <span class="kw">PRINT</span> <span class="str">"Enter a number: "</span>
+  <span class="kw">READ</span> number
+  Remainder <span class="op">=</span> number <span class="op">%</span> <span class="num">2</span>
+  <span class="kw">IF</span> Remainder <span class="op">==</span> <span class="num">0</span> <span class="kw">THEN</span>
+      <span class="kw">PRINT</span> <span class="str">"EVEN."</span>
+  <span class="kw">ELSE</span>
+      <span class="kw">PRINT</span> <span class="str">"ODD"</span>
+  <span class="kw">ENDIF</span>
+<span class="kw">END</span>
+        </div>
+        <p style="color:var(--muted);font-size:.82rem;margin-bottom:12px">🧪 <em>Test the trace:</em></p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="step-btn" onclick="traceEvenOdd(7)">n = 7</button>
+          <button class="step-btn" onclick="traceEvenOdd(12)">n = 12</button>
+          <button class="step-btn" onclick="traceEvenOdd(0)">n = 0</button>
+        </div>
+        <div class="step-info" id="trace-fc2" style="margin-top:12px">Click a trace button above to see execution.</div>
+      </div>
+    </div>
+
+    <!-- FC3: Loop -->
+    <div class="fc-panel" id="fc-fc3">
+      <div class="flowchart-container" style="flex-shrink:0;padding:16px">
+        <svg class="flowchart" viewBox="0 0 280 540" id="svg-fc3">
+          <ellipse cx="140" cy="36" rx="50" ry="22" class="fc-shape start"/>
+          <text x="140" y="36" class="fc-text">BEGIN</text>
+          <line x1="140" y1="58" x2="140" y2="88" class="fc-arrow"/>
+          <!-- INIT -->
+          <rect x="60" y="88" width="160" height="46" rx="3" class="fc-shape process"/>
+          <text x="140" y="104" class="fc-text small">sum = 0</text>
+          <text x="140" y="118" class="fc-text small">current_number = 1</text>
+          <line x1="140" y1="134" x2="140" y2="164" class="fc-arrow"/>
+          <!-- DECISION -->
+          <polygon points="140,164 210,204 140,244 70,204" class="fc-shape decision"/>
+          <text x="140" y="200" class="fc-text small">current_number</text>
+          <text x="140" y="214" class="fc-text small">&lt; 10 ?</text>
+          <!-- YES down -->
+          <line x1="140" y1="244" x2="140" y2="274" class="fc-arrow"/>
+          <text x="148" y="260" class="fc-label">YES</text>
+          <!-- LOOP BODY -->
+          <rect x="55" y="274" width="170" height="50" rx="3" class="fc-shape process"/>
+          <text x="140" y="294" class="fc-text small">sum = sum + current_number</text>
+          <text x="140" y="308" class="fc-text small">current_number = current_number + 1</text>
+          <!-- loop back -->
+          <line x1="55" y1="299" x2="20" y2="299" class="fc-arrow"/>
+          <line x1="20" y1="299" x2="20" y2="204" class="fc-arrow"/>
+          <line x1="20" y1="204" x2="70" y2="204" class="fc-arrow"/>
+          <!-- NO right -->
+          <line x1="210" y1="204" x2="240" y2="204" class="fc-arrow"/>
+          <text x="223" y="198" class="fc-label">NO</text>
+          <!-- OUTPUT -->
+          <polygon points="218,188 258,188 258,220 218,220" style="fill:rgba(232,93,93,.12);stroke:#e85d5d;stroke-width:2"/>
+          <text x="238" y="200" class="fc-text small">print</text>
+          <text x="238" y="212" class="fc-text small">sum</text>
+          <line x1="238" y1="220" x2="238" y2="380" class="fc-arrow"/>
+          <line x1="140" y1="324" x2="140" y2="380" class="fc-arrow" style="display:none"/>
+          <line x1="140" y1="380" x2="238" y2="380" class="fc-arrow" style="display:none"/>
+          <line x1="238" y1="380" x2="238" y2="420" class="fc-arrow"/>
+          <ellipse cx="238" cy="442" rx="40" ry="22" class="fc-shape start"/>
+          <text x="238" y="442" class="fc-text">END</text>
+        </svg>
+      </div>
+      <div class="fc-code" style="flex:1;min-width:220px">
+        <p style="color:var(--gold);font-family:'JetBrains Mono',monospace;font-size:.78rem;margin-bottom:8px">ALGORITHM: Sum of 1 to 9</p>
+        <div class="code-block" style="margin-bottom:16px">
+<span class="kw">BEGIN</span>
+  sum <span class="op">=</span> <span class="num">0</span>
+  current_number <span class="op">=</span> <span class="num">1</span>
+
+  <span class="kw">WHILE</span> current_number <span class="op">&lt;</span> <span class="num">10</span> <span class="kw">DO</span>
+    sum <span class="op">=</span> sum <span class="op">+</span> current_number
+    current_number <span class="op">=</span> current_number <span class="op">+</span> <span class="num">1</span>
+  <span class="kw">ENDWHILE</span>
+
+  <span class="kw">PRINT</span> sum
+<span class="kw">END</span>
+        </div>
+        <button class="step-btn" onclick="runLoopTrace()">▶ Trace Loop Step-by-Step</button>
+        <div class="step-info" id="trace-fc3" style="margin-top:12px;font-family:JetBrains Mono,monospace;font-size:.8rem;white-space:pre-wrap">Click to trace the loop execution.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ CONTROL STRUCTURES ══════════ -->
+<div class="tab-panel" id="tab-structures">
+  <div class="section-heading">
+    <h2>Control Structures</h2>
+    <p>The four building blocks of algorithmic logic</p>
+    <div class="accent-line"></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h3>1️⃣ Sequence</h3>
+      <div class="kp"><div class="kp-dot"></div><div>Statements executed <strong>one after another</strong>, in order</div></div>
+      <div class="kp"><div class="kp-dot"></div><div>No branching, no skipping</div></div>
+      <div class="kp"><div class="kp-dot"></div><div>Flow: top → bottom, left → right</div></div>
+      <div class="code-block" style="margin-top:12px">
+<span class="kw">Statement 1</span>
+<span class="op">↓</span>
+<span class="kw">Statement 2</span>
+<span class="op">↓</span>
+<span class="kw">Statement 3</span>
+      </div>
+    </div>
+    <div class="card">
+      <h3>2️⃣ Decision (Selection)</h3>
+      <div class="kp"><div class="kp-dot gold"></div><div>Branching based on a <strong style="color:var(--gold)">condition</strong></div></div>
+      <div class="kp"><div class="kp-dot gold"></div><div>Uses <strong style="color:var(--gold)">IF/THEN/ELSE</strong></div></div>
+      <div class="kp"><div class="kp-dot gold"></div><div>Diamond symbol with <strong style="color:var(--gold)">2 exits</strong>: YES and NO</div></div>
+      <div class="code-block" style="margin-top:12px">
+<span class="kw">IF</span> (condition) <span class="kw">THEN</span>
+    then-statement(s)
+<span class="kw">ELSE</span>
+    else-statement(s)
+<span class="kw">ENDIF</span>
+      </div>
+    </div>
+    <div class="card">
+      <h3>3️⃣ Loop (Repetition)</h3>
+      <div class="kp"><div class="kp-dot blue"></div><div>Repeats statements while a <strong style="color:var(--blue)">condition holds</strong></div></div>
+      <div class="kp"><div class="kp-dot blue"></div><div><strong style="color:var(--blue)">While Loop</strong>: Check condition FIRST, then execute</div></div>
+      <div class="kp"><div class="kp-dot blue"></div><div><strong style="color:var(--blue)">Do-While Loop</strong>: Execute FIRST, then check</div></div>
+      <div class="code-block" style="margin-top:12px">
+<span class="cm">// While Loop</span>
+<span class="kw">WHILE</span> (condition) <span class="kw">DO</span>
+    loop-statement(s)
+<span class="kw">ENDWHILE</span>
+
+<span class="cm">// Do-While Loop</span>
+<span class="kw">DO</span>
+    loop-statement(s)
+<span class="kw">WHILE</span> (condition)
+      </div>
+    </div>
+    <div class="card">
+      <h3>4️⃣ Case (Multi-Selection)</h3>
+      <div class="kp"><div class="kp-dot"></div><div>Like multiple if-else branches</div></div>
+      <div class="kp"><div class="kp-dot"></div><div>An <strong>expression</strong> is evaluated</div></div>
+      <div class="kp"><div class="kp-dot"></div><div>Each possible value has its own branch</div></div>
+      <div class="kp"><div class="kp-dot"></div><div><strong>"otherwise"</strong> = default branch</div></div>
+      <div class="code-block" style="margin-top:12px">
+<span class="kw">CASE</span> expression <span class="kw">OF</span>
+  choice_a: process_a
+  choice_b: process_b
+  <span class="kw">otherwise</span>: default_process
+<span class="kw">ENDCASE</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>⚖️ Comparison: While vs Do-While</h3>
+    <div class="grid2">
+      <div>
+        <p style="color:var(--gold);font-size:.85rem;margin-bottom:8px;font-weight:600">While Loop</p>
+        <div class="kp"><div class="kp-dot"></div><div>Condition checked <strong>BEFORE</strong> executing</div></div>
+        <div class="kp"><div class="kp-dot"></div><div>Body may <strong>never execute</strong> if condition is false from start</div></div>
+        <div class="kp"><div class="kp-dot"></div><div>Use when: You might need 0 iterations</div></div>
+      </div>
+      <div>
+        <p style="color:var(--teal);font-size:.85rem;margin-bottom:8px;font-weight:600">Do-While Loop</p>
+        <div class="kp"><div class="kp-dot teal"></div><div>Task executed <strong>FIRST</strong>, condition checked after</div></div>
+        <div class="kp"><div class="kp-dot teal"></div><div>Body <strong>always executes at least once</strong></div></div>
+        <div class="kp"><div class="kp-dot teal"></div><div>Use when: You need at least 1 iteration</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ LAB 9 ══════════ -->
+<div class="tab-panel" id="tab-lab">
+  <div class="section-heading">
+    <h2>Lab 9 — Algorithm &amp; Flowchart</h2>
+    <p>Deadline: Mar 27 (EE) | Mar 28 (ME) @ 11:59pm · Drawn by Hand</p>
+    <div class="accent-line"></div>
+  </div>
+
+  <div class="card" style="border-color:rgba(232,93,93,.4)">
+    <h3 style="color:#e85d5d">📌 Lab 9 Requirements</h3>
+    <p style="margin-bottom:14px;font-size:.9rem">You need to submit <strong>handwritten</strong> algorithms + flowcharts for both problems:</p>
+    <div class="kp"><div class="kp-dot" style="background:#e85d5d"></div><div><strong>Problem A:</strong> Calculate roots of a quadratic equation and identify their nature (real &amp; equal, real &amp; unequal, imaginary)</div></div>
+    <div class="kp"><div class="kp-dot" style="background:#e85d5d"></div><div><strong>Problem B:</strong> Give the equivalent USeP Scholastic Grade (e.g. 2.0) and Remarks (INC, AW, UW, PASSED, FAILED) based on a final grade percentage</div></div>
+  </div>
+
+  <div class="card">
+    <h3>Problem A — Quadratic Roots</h3>
+    <p style="color:var(--muted);font-size:.88rem;margin-bottom:16px">For ax² + bx + c = 0, the discriminant D = b² - 4ac determines root nature.</p>
+    <div class="grid2">
+      <div>
+        <p style="color:var(--gold);font-family:'JetBrains Mono',monospace;font-size:.78rem;margin-bottom:8px">ALGORITHM</p>
+        <div class="code-block">
+<span class="kw">Step 1:</span> <span class="op">Input</span> a, b, c
+<span class="kw">Step 2:</span> D <span class="op">←</span> b<span class="op">²</span> <span class="op">-</span> <span class="num">4</span><span class="op">*</span>a<span class="op">*</span>c
+<span class="kw">Step 3:</span>
+  <span class="kw">if</span> D <span class="op">&gt;</span> <span class="num">0</span> <span class="kw">then</span>
+    x1 <span class="op">←</span> (-b + √D) / (<span class="num">2</span>a)
+    x2 <span class="op">←</span> (-b - √D) / (<span class="num">2</span>a)
+    <span class="kw">Print</span> <span class="str">"Real &amp; Unequal Roots"</span>
+    <span class="kw">Print</span> x1, x2
+  <span class="kw">else if</span> D <span class="op">==</span> <span class="num">0</span> <span class="kw">then</span>
+    x <span class="op">←</span> -b / (<span class="num">2</span>a)
+    <span class="kw">Print</span> <span class="str">"Real &amp; Equal Roots"</span>
+    <span class="kw">Print</span> x
+  <span class="kw">else</span>
+    <span class="kw">Print</span> <span class="str">"Imaginary Roots"</span>
+  <span class="kw">endif</span>
+        </div>
+      </div>
+      <div>
+        <p style="color:var(--teal);font-family:'JetBrains Mono',monospace;font-size:.78rem;margin-bottom:8px">ROOT NATURE GUIDE</p>
+        <div class="card" style="background:#0d1117;margin:0">
+          <div class="kp"><div class="kp-dot"></div><div><strong style="color:var(--gold)">D &gt; 0</strong> → Two distinct real roots (real &amp; unequal)</div></div>
+          <div class="kp"><div class="kp-dot"></div><div><strong style="color:var(--teal)">D = 0</strong> → One repeated real root (real &amp; equal)</div></div>
+          <div class="kp"><div class="kp-dot"></div><div><strong style="color:var(--red)">D &lt; 0</strong> → No real roots (imaginary / complex)</div></div>
+          <div style="margin-top:14px;padding:10px;background:rgba(91,138,245,.1);border-radius:8px;font-size:.82rem">
+            <p style="color:var(--blue);margin-bottom:6px">Flowchart hint: Use NESTED decisions!</p>
+            <p>Decision 1: Is D &gt; 0?<br>→ YES: Real &amp; Unequal<br>→ NO: Decision 2: Is D = 0?<br>&nbsp;&nbsp;→ YES: Real &amp; Equal<br>&nbsp;&nbsp;→ NO: Imaginary</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Problem B — USeP Grading System</h3>
+    <p style="color:var(--muted);font-size:.88rem;margin-bottom:16px">Convert a final grade percentage to USeP scholastic grade and remarks.</p>
+    <div class="grid2">
+      <div>
+        <table class="sym-table">
+          <thead><tr><th>% Range</th><th>USeP Grade</th><th>Remarks</th></tr></thead>
+          <tbody>
+            <tr><td>97–100</td><td style="color:var(--gold)">1.0</td><td style="color:var(--teal)">PASSED</td></tr>
+            <tr><td>93–96</td><td style="color:var(--gold)">1.25</td><td style="color:var(--teal)">PASSED</td></tr>
+            <tr><td>89–92</td><td style="color:var(--gold)">1.5</td><td style="color:var(--teal)">PASSED</td></tr>
+            <tr><td>85–88</td><td style="color:var(--gold)">1.75</td><td style="color:var(--teal)">PASSED</td></tr>
+            <tr><td>81–84</td><td style="color:var(--gold)">2.0</td><td style="color:var(--teal)">PASSED</td></tr>
+            <tr><td>77–80</td><td style="color:var(--gold)">2.25</td><td style="color:var(--teal)">PASSED</td></tr>
+            <tr><td>73–76</td><td style="color:var(--gold)">2.5</td><td style="color:var(--teal)">PASSED</td></tr>
+            <tr><td>69–72</td><td style="color:var(--gold)">2.75</td><td style="color:var(--teal)">PASSED</td></tr>
+            <tr><td>65–68</td><td style="color:var(--gold)">3.0</td><td style="color:var(--teal)">PASSED</td></tr>
+            <tr><td>Below 65</td><td style="color:var(--red)">5.0</td><td style="color:var(--red)">FAILED</td></tr>
+            <tr><td>Incomplete</td><td style="color:var(--muted)">INC</td><td style="color:var(--muted)">Incomplete</td></tr>
+            <tr><td>Official Drop</td><td style="color:var(--muted)">AW</td><td style="color:var(--muted)">Authorized Withdrawal</td></tr>
+            <tr><td>Dropped</td><td style="color:var(--muted)">UW</td><td style="color:var(--muted)">Unauthorized Withdrawal</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <p style="color:var(--teal);font-family:'JetBrains Mono',monospace;font-size:.78rem;margin-bottom:8px">ALGORITHM SKELETON</p>
+        <div class="code-block">
+<span class="kw">Step 1:</span> Input finalGrade
+<span class="kw">Step 2:</span>
+  <span class="kw">if</span> finalGrade <span class="op">&gt;=</span> <span class="num">97</span> <span class="kw">then</span>
+    grade <span class="op">←</span> <span class="str">"1.0 PASSED"</span>
+  <span class="kw">else if</span> finalGrade <span class="op">&gt;=</span> <span class="num">93</span> <span class="kw">then</span>
+    grade <span class="op">←</span> <span class="str">"1.25 PASSED"</span>
+  <span class="cm">... (continue for each range)</span>
+  <span class="kw">else if</span> finalGrade <span class="op">&lt;</span> <span class="num">65</span> <span class="kw">then</span>
+    grade <span class="op">←</span> <span class="str">"5.0 FAILED"</span>
+  <span class="kw">endif</span>
+<span class="kw">Step 3:</span> Print grade
+        </div>
+        <div class="info-alert" style="margin-top:12px;font-size:.82rem">
+          <strong>Flowchart Tip:</strong> This is a CASE structure problem. Use nested if-else diamonds. Draw from top to bottom checking each range.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ FLASHCARDS ══════════ -->
+<div class="tab-panel" id="tab-flashcards">
+  <div class="section-heading">
+    <h2>Flashcards</h2>
+    <p>Click a card to flip it. Use arrows to navigate.</p>
+    <div class="accent-line"></div>
+  </div>
+
+  <div class="flashcard-area">
+    <div class="flashcard" id="flashcard" onclick="flipCard()">
+      <div class="fc-front">
+        <p style="font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted);margin-bottom:8px">TERM</p>
+        <h3 id="fc-front-text">Algorithm</h3>
+        <p id="fc-front-hint">Tap to see definition</p>
+      </div>
+      <div class="fc-back">
+        <p style="font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted);margin-bottom:8px">DEFINITION</p>
+        <p id="fc-back-text">An ordered sequence of steps that solves a problem. Created during the problem-solving phase before implementation.</p>
+      </div>
+    </div>
+    <p class="flip-hint">👆 Click card to flip</p>
+    <div class="fc-progress"><div class="fc-progress-bar" id="fc-prog"></div></div>
+    <div class="fc-nav">
+      <button class="fc-nav-btn" onclick="prevCard()">← Prev</button>
+      <span class="fc-counter" id="fc-counter">1 / 24</span>
+      <button class="fc-nav-btn" onclick="nextCard()">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ QUIZ ══════════ -->
+<div class="tab-panel" id="tab-quiz">
+  <div class="section-heading">
+    <h2>75-Item Quiz</h2>
+    <p>Test your knowledge across all topics — instant feedback and live scoring</p>
+    <div class="accent-line"></div>
+  </div>
+
+  <div id="quiz-area">
+    <div class="quiz-header">
+      <div class="quiz-score-box">
+        <div class="score-num" id="q-score">0</div>
+        <div class="score-label">SCORE</div>
+      </div>
+      <div class="quiz-progress-wrap">
+        <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--muted)">
+          <span id="q-progress-label">Question 1 of 75</span>
+          <span id="q-pct">0%</span>
+        </div>
+        <div class="quiz-progress-bar-outer"><div class="quiz-progress-bar-inner" id="q-progress-bar" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="q-num" id="q-num">Q1</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="q-options"></div>
+      <div class="feedback" id="q-feedback" style="display:none"></div>
+      <button class="next-btn" id="next-btn" onclick="nextQuestion()" disabled>Next Question →</button>
+    </div>
+  </div>
+  <div id="quiz-result" style="display:none"></div>
+</div>
+
+<!-- ══════════ GAME ══════════ -->
+<div class="tab-panel" id="tab-game">
+  <div class="section-heading">
+    <h2>🎮 Flowchart Symbol Challenge</h2>
+    <p>Identify the flowchart symbol as fast as possible!</p>
+    <div class="accent-line teal"></div>
+  </div>
+
+  <div class="game-area">
+    <div class="game-stats">
+      <div class="stat-box"><div class="val" id="g-score">0</div><div class="lbl">SCORE</div></div>
+      <div class="stat-box"><div class="val game-timer" id="g-timer">30</div><div class="lbl">SECONDS</div></div>
+      <div class="stat-box"><div class="val" id="g-streak">0</div><div class="lbl">STREAK 🔥</div></div>
+    </div>
+
+    <div class="game-board" id="game-board">
+      <div class="game-prompt" id="game-prompt">What does this symbol represent?</div>
+      <div class="shape-display" id="shape-display"></div>
+      <div class="game-choices" id="game-choices"></div>
+      <button class="start-game-btn" id="start-btn" onclick="startGame()">▶ Start Game</button>
+    </div>
+
+    <div class="card" style="text-align:left;margin-top:16px">
+      <h3 style="font-size:.95rem">How to play</h3>
+      <p style="font-size:.85rem;color:var(--muted);margin-top:6px">A flowchart shape appears — click the correct label! You have 30 seconds. Each correct answer = +10 pts. Get on a streak for bonus points!</p>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script>
+// ═══════════════════════════════════════
+// TAB SWITCHING
+// ═══════════════════════════════════════
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function switchFC(id, btn) {
+  document.querySelectorAll('.fc-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.fc-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('fc-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ═══════════════════════════════════════
+// FLOWCHART TRACES
+// ═══════════════════════════════════════
+function traceGrade(m1, m2, m3, m4) {
+  const g = (m1 + m2 + m3 + m4) / 4;
+  const result = g < 75 ? 'FAILED ✗' : 'PASSED ✓';
+  const color = g < 75 ? '#e85d5d' : '#3ecfb2';
+  document.getElementById('trace-fc1').innerHTML =
+    `Marks: ${m1}, ${m2}, ${m3}, ${m4}<br>GRADE = (${m1}+${m2}+${m3}+${m4})/4 = <strong style="color:var(--gold)">${g}</strong><br>IS ${g} &lt; 75? → <strong>${g < 75 ? 'YES' : 'NO'}</strong><br>Result: <strong style="color:${color}">${result}</strong>`;
+}
+
+function traceEvenOdd(n) {
+  const r = n % 2;
+  const result = r === 0 ? 'EVEN ✓' : 'ODD ✓';
+  const color = r === 0 ? '#3ecfb2' : '#e8b84b';
+  document.getElementById('trace-fc2').innerHTML =
+    `number = ${n}<br>Remainder = ${n} % 2 = <strong style="color:var(--gold)">${r}</strong><br>Is Remainder = 0? → <strong>${r === 0 ? 'YES' : 'NO'}</strong><br>Result: <strong style="color:${color}">${result}</strong>`;
+}
+
+function runLoopTrace() {
+  let s = 0, c = 1, log = 'sum=0, current=1\n\n';
+  while (c < 10) {
+    s += c;
+    log += `c=${c}: sum = ${s-c} + ${c} = ${s} | c becomes ${c+1}\n`;
+    c++;
+  }
+  log += `\nLoop ends (c=10, NOT < 10)\nFinal sum = ${s}`;
+  document.getElementById('trace-fc3').textContent = log;
+}
+
+// ═══════════════════════════════════════
+// FLASHCARDS
+// ═══════════════════════════════════════
+const cards = [
+  {t:'Algorithm', d:'An ordered sequence of steps that solves a problem. Created during the problem-solving phase.'},
+  {t:'Pseudocode', d:'An artificial and informal language, very similar to everyday English, used to develop algorithms before coding.'},
+  {t:'Problem-Solving Phase', d:'The first phase of programming — creating the algorithm/pseudocode/flowchart before writing actual code.'},
+  {t:'Implementation Phase', d:'The second phase of programming — translating the algorithm into an actual programming language.'},
+  {t:'Flowchart', d:'A graphical representation of an algorithm. It shows logic solution, individual steps and their interconnections.'},
+  {t:'Oval Symbol', d:'Used in flowcharts to denote the BEGINNING or END (terminal) of the program (START / STOP).'},
+  {t:'Parallelogram Symbol', d:'Used in flowcharts to denote an INPUT operation — reading data from the user.'},
+  {t:'Rectangle Symbol', d:'Used in flowcharts to denote a PROCESS — computation like addition, subtraction, assignment, etc.'},
+  {t:'Diamond Symbol', d:'Used in flowcharts to denote a DECISION / BRANCH (IF/THEN/ELSE). Has exactly two exits: YES and NO.'},
+  {t:'Hybrid Symbol', d:'Used in flowcharts to denote an OUTPUT operation — displaying or printing results.'},
+  {t:'Flow Line / Arrow', d:'Denotes the direction of logic flow in a flowchart — connects shapes to show execution order.'},
+  {t:'Sequence Control Structure', d:'Statements executed one after another in order, top to bottom. No branching or skipping.'},
+  {t:'Decision Control Structure', d:'Branching based on a condition (IF/THEN/ELSE). Uses a diamond symbol with YES and NO exits.'},
+  {t:'Loop Control Structure', d:'Repeats statements based on a condition. Two types: While Loop (check first) and Do-While Loop (execute first).'},
+  {t:'Case / Multi-selection Structure', d:'Evaluates an expression and branches to one of multiple options. Uses an "otherwise" for the default case.'},
+  {t:'While Loop', d:'Checks the condition FIRST before executing the loop body. Body may never execute if condition is initially false.'},
+  {t:'Do-While Loop', d:'Executes the loop body FIRST, then checks the condition. Body always runs at least once.'},
+  {t:'Modulo Operator (%)', d:'Returns the REMAINDER of division. Used in the Even/Odd algorithm: if number % 2 == 0 then EVEN, else ODD.'},
+  {t:'Assignment Operator (←)', d:'Assigns a value to a variable. E.g., GRADE ← (M1+M2+M3+M4)/4 means compute and store the result in GRADE.'},
+  {t:'Discriminant (D = b²-4ac)', d:'Used in quadratic equations: D>0 = real & unequal roots; D=0 = real & equal roots; D<0 = imaginary roots.'},
+  {t:'endif / ENDIF', d:'Keyword used to close an IF-ELSE block in pseudocode. Signals the end of conditional logic.'},
+  {t:'Desk-Tracing / Manual Checking', d:'Manually tracing through an algorithm with test values to verify it produces correct results before coding.'},
+  {t:'INC (USeP Grading)', d:'Incomplete — a student who has not completed all requirements but may finish them in the following semester.'},
+  {t:'Refinement (Algorithm)', d:'The process of successively improving pseudocode into a step-by-step detailed algorithm very close to a programming language.'},
+];
+let curCard = 0; let isFlipped = false;
+
+function updateCard() {
+  const card = document.getElementById('flashcard');
+  card.classList.remove('flipped');
+  isFlipped = false;
+  document.getElementById('fc-front-text').textContent = cards[curCard].t;
+  document.getElementById('fc-back-text').textContent = cards[curCard].d;
+  document.getElementById('fc-counter').textContent = `${curCard+1} / ${cards.length}`;
+  const pct = ((curCard+1)/cards.length*100).toFixed(0);
+  document.getElementById('fc-prog').style.width = pct + '%';
+}
+function flipCard() {
+  document.getElementById('flashcard').classList.toggle('flipped');
+}
+function nextCard() { curCard = (curCard+1) % cards.length; updateCard(); }
+function prevCard() { curCard = (curCard-1+cards.length) % cards.length; updateCard(); }
+updateCard();
+
+// ═══════════════════════════════════════
+// QUIZ DATA
+// ═══════════════════════════════════════
+const questions = [
+  {q:"A computer programming task is divided into how many phases?", opts:["One","Two","Three","Four"], ans:1, exp:"It has two phases: Problem-Solving Phase and Implementation Phase."},
+  {q:"What is an algorithm?", opts:["A programming language","An ordered sequence of steps that solves a problem","A type of flowchart symbol","A computer hardware component"], ans:1, exp:"An algorithm is an ordered sequence of steps that solves a problem."},
+  {q:"What is pseudocode?", opts:["Machine code","Compiled code","An artificial informal language similar to everyday English","A type of flowchart"], ans:2, exp:"Pseudocode is an artificial and informal language that helps programmers develop algorithms."},
+  {q:"Which phase involves implementing the algorithm in a programming language?", opts:["Problem-solving phase","Debugging phase","Implementation phase","Testing phase"], ans:2, exp:"The implementation phase translates the algorithm into an actual programming language."},
+  {q:"What is the first step in problem solving?", opts:["Write actual code","Produce a general algorithm using pseudocode","Debug the program","Compile the program"], ans:1, exp:"First, produce a general algorithm (using pseudocode), then refine it."},
+  {q:"The oval shape in a flowchart denotes:", opts:["A process","A decision","An input","The beginning or end of the program"], ans:3, exp:"The oval (terminal) symbol denotes the beginning or end of the program."},
+  {q:"Which flowchart symbol denotes an INPUT operation?", opts:["Oval","Parallelogram","Rectangle","Diamond"], ans:1, exp:"The parallelogram denotes an input operation."},
+  {q:"Which flowchart symbol denotes a PROCESS?", opts:["Diamond","Hybrid","Rectangle","Parallelogram"], ans:2, exp:"The rectangle denotes a process (e.g., addition, subtraction, division)."},
+  {q:"Which flowchart symbol is used for decision-making (IF/THEN/ELSE)?", opts:["Rectangle","Oval","Hybrid","Diamond"], ans:3, exp:"The diamond denotes a decision/branch with two routes."},
+  {q:"Which flowchart symbol denotes an OUTPUT operation?", opts:["Oval","Parallelogram","Hybrid","Rectangle"], ans:2, exp:"The hybrid symbol denotes an output operation (print/display)."},
+  {q:"What does a flow line represent in a flowchart?", opts:["A process","The beginning of the program","The direction of logic flow","An input operation"], ans:2, exp:"Flow lines denote the direction of logic flow in the program."},
+  {q:"A flowchart MUST always have:", opts:["At least 3 decisions","A loop","A start and stop","Input and output"], ans:2, exp:"A flowchart must have a start and stop (using oval symbols)."},
+  {q:"In a flowchart, a 'hanging' step means:", opts:["The step takes too long","A step with no connection to the next — this is NOT allowed","A step that repeats","A step that outputs data"], ans:1, exp:"All steps must connect. You cannot leave a step hanging with no connection."},
+  {q:"A flowchart is another algorithm but:", opts:["Textual","Graphical","Pseudocode","Compiled"], ans:1, exp:"A flowchart is another algorithm but graphical."},
+  {q:"How many exits does a diamond (decision) symbol have?", opts:["1","2","3","4"], ans:1, exp:"A diamond has exactly 2 exits: Yes (True) and No (False)."},
+  {q:"The four flowchart control structures are:", opts:["Input, Process, Output, Loop","Start, Stop, Decision, Loop","Sequence, Decision, Loop, Case","If, Else, While, Do-While"], ans:2, exp:"The four control structures are: Sequence, Decision, Loop, and Case."},
+  {q:"In the Sequence control structure, statements are executed:", opts:["Based on a condition","One after another in order","Only if a condition is true","In random order"], ans:1, exp:"In sequence structure, statements execute one after another in order."},
+  {q:"The Decision control structure uses which keyword in pseudocode?", opts:["WHILE","LOOP","IF/THEN/ELSE","CASE"], ans:2, exp:"Decision uses IF/THEN/ELSE structure."},
+  {q:"Which loop structure checks the condition FIRST before executing?", opts:["Do-While Loop","For Loop","While Loop","Repeat Loop"], ans:2, exp:"The While Loop checks the condition first. If false initially, the body never executes."},
+  {q:"Which loop structure always executes the body at least ONCE?", opts:["While Loop","Do-While Loop","For Loop","None"], ans:1, exp:"The Do-While Loop executes the body first, then checks the condition."},
+  {q:"In Example 1 (Grade Checker), how many marks are averaged?", opts:["3","4","5","2"], ans:1, exp:"The final grade is the average of four marks: M1, M2, M3, M4."},
+  {q:"In Example 1, the algorithm prints 'FAILED' if GRADE is:", opts:["Equal to 75","Greater than 75","Less than 75","Less than or equal to 60"], ans:2, exp:"The algorithm checks: if (GRADE < 75) then Print 'FAILED'."},
+  {q:"In Example 1, GRADE ← (M1+M2+M3+M4)/4 — what does '←' mean?", opts:["Less than","Is equal to","Comparison","Assignment — store value into GRADE"], ans:3, exp:"The arrow (←) is the assignment operator — it assigns the computed value to GRADE."},
+  {q:"What does the % operator return in the Even/Odd algorithm?", opts:["The quotient","The square root","The remainder of division","The product"], ans:2, exp:"The modulo operator (%) returns the remainder. number % 2 = 0 means EVEN."},
+  {q:"In the Even/Odd algorithm, if Remainder = 0, the number is:", opts:["ODD","PRIME","EVEN","NEGATIVE"], ans:2, exp:"If number % 2 == 0, the number is EVEN."},
+  {q:"In the Even/Odd algorithm, if Remainder = 1, the number is:", opts:["EVEN","ODD","ZERO","PRIME"], ans:1, exp:"If number % 2 == 1 (non-zero), the number is ODD."},
+  {q:"In the loop example (Sum 1-9), sum is initialized to:", opts:["1","10","0","9"], ans:2, exp:"sum = 0 is the initial value before the loop starts."},
+  {q:"In the loop example, current_number is initialized to:", opts:["0","1","10","9"], ans:1, exp:"current_number = 1 to start counting from 1."},
+  {q:"The loop continues while current_number is:", opts:["Greater than 10","Less than 10","Equal to 10","Less than or equal to 10"], ans:1, exp:"The condition is current_number < 10 (strictly less than)."},
+  {q:"When current_number = 10, the loop:", opts:["Continues","Exits and prints sum","Resets to 0","Runs one more time"], ans:1, exp:"10 is NOT less than 10, so the condition is false and the loop exits."},
+  {q:"What is the final value of sum in the loop example (1 to 9)?", opts:["45","36","55","44"], ans:0, exp:"1+2+3+4+5+6+7+8+9 = 45."},
+  {q:"If M1=70, M2=65, M3=60, M4=55, what does the algorithm print?", opts:["PASSED","FAILED","ERROR","75"], ans:1, exp:"GRADE = (70+65+60+55)/4 = 250/4 = 62.5 — less than 75, so FAILED."},
+  {q:"If M1=80, M2=85, M3=90, M4=75, what does the algorithm print?", opts:["FAILED","PASSED","GRADE=82.5","INVALID"], ans:1, exp:"GRADE = (80+85+90+75)/4 = 330/4 = 82.5 — not less than 75, so PASSED."},
+  {q:"The Case/Multi-selection structure is best used when:", opts:["You have one condition","You have multiple possible values for an expression","You need to loop","You need sequential steps"], ans:1, exp:"Case structure handles multiple possible values with different actions for each."},
+  {q:"The 'otherwise' branch in a Case structure is:", opts:["The first branch","The most important branch","The default branch when no other choice matches","Optional — not needed"], ans:2, exp:"'otherwise' is the default process when no specific choice matches."},
+  {q:"Which symbol is used for START in a flowchart?", opts:["Rectangle","Parallelogram","Oval","Diamond"], ans:2, exp:"The oval/terminal symbol is used for both START and STOP."},
+  {q:"Which symbol is used for STOP in a flowchart?", opts:["Diamond","Hybrid","Oval","Rectangle"], ans:2, exp:"The oval/terminal symbol is used for both START and STOP."},
+  {q:"A pseudocode if-else block in the lecture ends with the keyword:", opts:["STOP","DONE","endif","CLOSE"], ans:2, exp:"In pseudocode, if-else blocks end with 'endif'."},
+  {q:"What does 'refining the algorithm' mean?", opts:["Deleting unnecessary steps","Making the algorithm more detailed and closer to a programming language","Translating to machine code","Drawing the flowchart"], ans:1, exp:"Refinement means making the algorithm more detailed step-by-step until it resembles actual code."},
+  {q:"In the Even/Odd flowchart, what comes immediately before the decision diamond?", opts:["Print the result","Read number","Compute Remainder = number % 2","START"], ans:2, exp:"After reading the number, we compute Remainder = number % 2, then check if it equals 0."},
+  {q:"For a quadratic equation ax²+bx+c=0, the discriminant formula is:", opts:["b²+4ac","b²-4ac","√(b²-4ac)","2a/(-b)"], ans:1, exp:"Discriminant D = b² - 4ac determines the nature of the roots."},
+  {q:"If discriminant D > 0, the roots are:", opts:["Imaginary","Real and equal","Real and unequal","Zero"], ans:2, exp:"D > 0 means two distinct real roots (real and unequal)."},
+  {q:"If discriminant D = 0, the roots are:", opts:["Imaginary","Real and equal","Real and unequal","Complex"], ans:1, exp:"D = 0 means one repeated real root (real and equal)."},
+  {q:"If discriminant D < 0, the roots are:", opts:["Real and unequal","Real and equal","Zero","Imaginary"], ans:3, exp:"D < 0 means no real roots — the roots are imaginary (complex)."},
+  {q:"Which control structure is best for Lab 9 Problem B (USeP Grade)?", opts:["Sequence","Loop","Case/Multi-selection","None"], ans:2, exp:"Multiple grade ranges = multiple cases. Case/Multi-selection or nested if-else is appropriate."},
+  {q:"In the USeP grading system, '5.0 FAILED' corresponds to:", opts:["Below 65%","Below 75%","Below 70%","Below 60%"], ans:0, exp:"A final grade below 65% corresponds to 5.0 FAILED in USeP's grading system."},
+  {q:"INC in USeP grading means:", opts:["Invalid grade","Incomplete","Incorrect","Initial grade"], ans:1, exp:"INC = Incomplete. The student hasn't completed all requirements."},
+  {q:"AW in USeP grading means:", opts:["Absent-Withdrawn","Authorized Withdrawal","Academic Warning","Awarded"], ans:1, exp:"AW = Authorized Withdrawal. The student officially dropped the subject."},
+  {q:"UW in USeP grading means:", opts:["Unit Waived","Unauthorized Withdrawal","Under Warning","Unknown"], ans:1, exp:"UW = Unauthorized Withdrawal. The student was dropped without official process."},
+  {q:"The quadratic formula for roots is:", opts:["x = -b ± √D / a","x = (-b ± √D) / 2a","x = b ± √D / 2a","x = (-b ± √D) / a"], ans:1, exp:"x = (-b ± √(b²-4ac)) / (2a) is the standard quadratic formula."},
+  {q:"Which flowchart symbol would you use to display 'PASSED' or 'FAILED'?", opts:["Rectangle","Diamond","Hybrid","Parallelogram"], ans:2, exp:"The Hybrid symbol denotes output operations like printing or displaying results."},
+  {q:"Which flowchart symbol would you use to read user input for M1, M2, M3, M4?", opts:["Rectangle","Diamond","Hybrid","Parallelogram"], ans:3, exp:"The Parallelogram denotes input operations."},
+  {q:"A flowchart 'emphasizes individual steps and their':", opts:["Colors","Interconnections","Variables","Outputs"], ans:1, exp:"A flowchart emphasizes individual steps and their interconnections."},
+  {q:"What is the key difference between pseudocode and a flowchart?", opts:["Pseudocode is more accurate","Flowchart is graphical, pseudocode is text-based","Pseudocode uses symbols","Flowchart is informal"], ans:1, exp:"A flowchart is the graphical version; pseudocode is text-based (informal English)."},
+  {q:"In the grade algorithm, which step involves computation?", opts:["Step 1","Step 2","Step 3","Step 4"], ans:1, exp:"Step 2: GRADE ← (M1+M2+M3+M4)/4 is the computational step."},
+  {q:"The Do-While Loop is different from the While Loop because:", opts:["It never executes","It always executes the body at least once","It checks the condition first","It has no condition"], ans:1, exp:"Do-While always runs the body at least once, regardless of the condition."},
+  {q:"In the loop example, what happens to current_number each iteration?", opts:["It resets to 0","It stays the same","It increases by 1","It doubles"], ans:2, exp:"current_number = current_number + 1 — it increments by 1 each loop."},
+  {q:"What shape in a flowchart shows that the program should continue along one of two routes?", opts:["Rectangle","Oval","Parallelogram","Diamond"], ans:3, exp:"The diamond shows a decision with two routes: Yes or No."},
+  {q:"In Example 1's flowchart, which shape is used for 'GRADE=(M1+M2+M3+M4)/4'?", opts:["Diamond","Oval","Rectangle","Parallelogram"], ans:2, exp:"A computation/assignment is a process, represented by a Rectangle."},
+  {q:"In Example 2's flowchart, what shape is used for 'Input number'?", opts:["Rectangle","Oval","Parallelogram","Diamond"], ans:2, exp:"Input operations use the Parallelogram shape."},
+  {q:"Can a flowchart have NO input?", opts:["Never — all flowcharts need input","Yes — some algorithms have no input","No — input is always required","Only in loops"], ans:1, exp:"Some algorithms work with fixed values and don't require user input, so no input step is needed."},
+  {q:"Which control structure is shown in the loop diagram in the lecture?", opts:["Sequence","Decision","Loop","Case"], ans:2, exp:"The sum 1-9 example demonstrates the Loop control structure (While Loop)."},
+  {q:"What is '45' the result of in the loop example?", opts:["Sum of numbers 1 to 9","Sum of numbers 1 to 10","Product of 9 × 5","Average of 1-9"], ans:0, exp:"sum = 1+2+3+4+5+6+7+8+9 = 45."},
+  {q:"In the Case structure diagram, 'process a', 'process b', etc. all converge to:", opts:["A new decision","The start","A single exit point","Another case"], ans:2, exp:"All branches in a Case structure converge back to a single exit point."},
+  {q:"What keyword begins the pseudocode in Example 2 (Even/Odd)?", opts:["START","INIT","BEGIN","OPEN"], ans:2, exp:"Example 2 starts with the keyword BEGIN."},
+  {q:"What keyword ends the pseudocode in Example 2 (Even/Odd)?", opts:["STOP","CLOSE","FINISH","END"], ans:3, exp:"Example 2 ends with the keyword END."},
+  {q:"In a decision flowchart structure, the two exits are labeled:", opts:["True/False only","Yes/No or True/False","1 and 0","A and B"], ans:1, exp:"Decision exits are labeled Yes/No or equivalently True/False."},
+  {q:"The purpose of desk-tracing (manual checking) is to:", opts:["Write the code","Debug the compiler","Verify the algorithm produces correct results with test data","Create a flowchart"], ans:2, exp:"Desk-tracing manually checks the algorithm with test values to ensure correctness."},
+  {q:"A 'general algorithm' in the problem-solving process is written using:", opts:["Machine code","Assembly","Pseudocode","Flowchart symbols only"], ans:2, exp:"First produce a general algorithm using pseudocode (informal English-like language)."},
+  {q:"Which of these best describes pseudocode?", opts:["Machine-readable instructions","A formal programming language","An English-like informal planning language","Assembly language"], ans:2, exp:"Pseudocode is an artificial and informal language very similar to everyday English."},
+  {q:"In a flowchart, 'control flow from one action to the next' is shown by:", opts:["Rectangles","Ovals","Flow lines/arrows","Diamonds"], ans:2, exp:"Flow lines (arrows) show the direction of control flow between steps."},
+  {q:"The algorithm for Lab 9 Problem A requires which control structure primarily?", opts:["Sequence only","Loop","Nested Decision (if-else-if)","Case"], ans:2, exp:"Checking discriminant values (D>0, D=0, D<0) requires nested decision structures."},
+  {q:"If M1=75, M2=75, M3=75, M4=75 in Example 1, the result is:", opts:["FAILED","PASSED","GRADE=75","UNDECIDED"], ans:1, exp:"GRADE = (75+75+75+75)/4 = 75. Is 75 < 75? NO. So result is PASSED."},
+  {q:"What is the role of 'endif' in a pseudocode algorithm?", opts:["It starts a new loop","It closes/terminates the if-else block","It prints output","It declares a variable"], ans:1, exp:"'endif' closes the if-else conditional block in pseudocode."},
+  {q:"In the Case structure example (fruit), which branch handles any fruit NOT listed?", opts:["Apple","Peach","Pear","Other (default)"], ans:3, exp:"The 'Other' branch handles any fruit not specifically listed — it's the default case."},
+];
+
+let qIndex = 0, qScore = 0, answered = false;
+
+function loadQuestion() {
+  const q = questions[qIndex];
+  document.getElementById('q-num').textContent = `Q${qIndex+1}`;
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('q-progress-label').textContent = `Question ${qIndex+1} of ${questions.length}`;
+  const pct = Math.round((qIndex/questions.length)*100);
+  document.getElementById('q-pct').textContent = pct + '%';
+  document.getElementById('q-progress-bar').style.width = pct + '%';
+  document.getElementById('q-feedback').style.display = 'none';
+  document.getElementById('next-btn').disabled = true;
+  answered = false;
+  const opts = document.getElementById('q-options');
+  opts.innerHTML = '';
+  q.opts.forEach((o, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.textContent = o;
+    btn.onclick = () => selectAnswer(i, btn);
+    opts.appendChild(btn);
+  });
+}
+
+function selectAnswer(i, btn) {
+  if (answered) return;
+  answered = true;
+  const q = questions[qIndex];
+  const fb = document.getElementById('q-feedback');
+  fb.style.display = 'block';
+  document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+  if (i === q.ans) {
+    qScore += 10;
+    btn.classList.add('correct');
+    fb.className = 'feedback correct';
+    fb.textContent = '✓ Correct! ' + q.exp;
+    document.getElementById('q-score').textContent = qScore;
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.option-btn')[q.ans].classList.add('correct');
+    fb.className = 'feedback wrong';
+    fb.textContent = '✗ Incorrect. ' + q.exp;
+  }
+  document.getElementById('next-btn').disabled = false;
+}
+
+function nextQuestion() {
+  qIndex++;
+  if (qIndex >= questions.length) {
+    showResult();
+  } else {
+    loadQuestion();
+  }
+}
+
+function showResult() {
+  document.getElementById('quiz-area').style.display = 'none';
+  const pct = Math.round((qScore / (questions.length * 10)) * 100);
+  let grade = pct >= 97 ? '1.0' : pct >= 93 ? '1.25' : pct >= 89 ? '1.5' : pct >= 85 ? '1.75' : pct >= 81 ? '2.0' : pct >= 77 ? '2.25' : pct >= 73 ? '2.5' : pct >= 69 ? '2.75' : pct >= 65 ? '3.0' : '5.0';
+  let remark = pct >= 65 ? 'PASSED 🎉' : 'FAILED 😔 — review and retry!';
+  document.getElementById('quiz-result').style.display = 'block';
+  document.getElementById('quiz-result').innerHTML = `
+    <div class="result-panel">
+      <p style="font-family:JetBrains Mono,monospace;color:var(--muted);margin-bottom:8px">FINAL SCORE</p>
+      <div class="big-score">${qScore}<span style="font-size:2rem">/${questions.length*10}</span></div>
+      <div class="grade-label">${pct}% — USeP Grade: ${grade}</div>
+      <div style="font-size:1.1rem;color:var(--text);margin-top:8px">${remark}</div>
+      <button class="restart-btn" onclick="restartQuiz()">↺ Restart Quiz</button>
+    </div>`;
+}
+
+function restartQuiz() {
+  qIndex = 0; qScore = 0; answered = false;
+  document.getElementById('q-score').textContent = '0';
+  document.getElementById('quiz-area').style.display = 'block';
+  document.getElementById('quiz-result').style.display = 'none';
+  loadQuestion();
+}
+
+loadQuestion();
+
+// ═══════════════════════════════════════
+// GAME
+// ═══════════════════════════════════════
+const shapes = [
+  {name:'Oval (Terminal)', use:'Start / Stop', svg:`<svg viewBox="0 0 140 80" width="140" height="80"><ellipse cx="70" cy="40" rx="65" ry="34" fill="rgba(62,207,178,.15)" stroke="#3ecfb2" stroke-width="3"/><text x="70" y="42" fill="#e8e4d8" font-size="13" text-anchor="middle" dominant-baseline="middle" font-family="JetBrains Mono">START/STOP</text></svg>`},
+  {name:'Parallelogram', use:'Input Operation', svg:`<svg viewBox="0 0 140 80" width="140" height="80"><polygon points="20,60 35,20 120,20 105,60" fill="rgba(62,207,178,.08)" stroke="#3ecfb2" stroke-width="3"/><text x="70" y="42" fill="#e8e4d8" font-size="12" text-anchor="middle" dominant-baseline="middle" font-family="JetBrains Mono">INPUT</text></svg>`},
+  {name:'Rectangle', use:'Process (computation)', svg:`<svg viewBox="0 0 140 80" width="140" height="80"><rect x="15" y="15" width="110" height="50" fill="rgba(91,138,245,.12)" stroke="#5b8af5" stroke-width="3" rx="3"/><text x="70" y="42" fill="#e8e4d8" font-size="12" text-anchor="middle" dominant-baseline="middle" font-family="JetBrains Mono">PROCESS</text></svg>`},
+  {name:'Diamond', use:'Decision / Branch', svg:`<svg viewBox="0 0 140 80" width="140" height="80"><polygon points="70,5 135,40 70,75 5,40" fill="rgba(232,184,75,.12)" stroke="#e8b84b" stroke-width="3"/><text x="70" y="42" fill="#e8e4d8" font-size="11" text-anchor="middle" dominant-baseline="middle" font-family="JetBrains Mono">DECISION</text></svg>`},
+  {name:'Hybrid', use:'Output Operation', svg:`<svg viewBox="0 0 140 80" width="140" height="80"><polygon points="10,40 25,10 115,10 130,40 115,70 25,70" fill="rgba(232,93,93,.12)" stroke="#e85d5d" stroke-width="3"/><text x="70" y="42" fill="#e8e4d8" font-size="12" text-anchor="middle" dominant-baseline="middle" font-family="JetBrains Mono">OUTPUT</text></svg>`},
+  {name:'Flow Line / Arrow', use:'Direction of logic flow', svg:`<svg viewBox="0 0 140 80" width="140" height="80"><line x1="20" y1="40" x2="100" y2="40" stroke="#7a7d8e" stroke-width="3"/><polygon points="100,33 120,40 100,47" fill="#7a7d8e"/><text x="70" y="62" fill="#7a7d8e" font-size="10" text-anchor="middle" font-family="JetBrains Mono">FLOW LINE</text></svg>`},
+];
+
+let gScore=0, gStreak=0, gTimer=30, gInterval=null, gTimerInt=null, gameRunning=false;
+
+function startGame() {
+  gScore=0; gStreak=0; gTimer=30;
+  document.getElementById('g-score').textContent='0';
+  document.getElementById('g-streak').textContent='0';
+  document.getElementById('g-timer').textContent='30';
+  document.getElementById('start-btn').style.display='none';
+  gameRunning=true;
+  gTimerInt = setInterval(()=>{
+    gTimer--;
+    document.getElementById('g-timer').textContent=gTimer;
+    if(gTimer<=0){ endGame(); }
+  },1000);
+  showGameQuestion();
+}
+
+function showGameQuestion() {
+  if(!gameRunning) return;
+  const correct = shapes[Math.floor(Math.random()*shapes.length)];
+  const choices = [correct];
+  const pool = shapes.filter(s=>s.name!==correct.name);
+  while(choices.length<4){ const r=pool.splice(Math.floor(Math.random()*pool.length),1)[0]; choices.push(r); }
+  choices.sort(()=>Math.random()-.5);
+  document.getElementById('shape-display').innerHTML = correct.svg;
+  document.getElementById('game-prompt').textContent = 'What does this symbol represent?';
+  const choicesEl = document.getElementById('game-choices');
+  choicesEl.innerHTML='';
+  choices.forEach(c=>{
+    const btn = document.createElement('button');
+    btn.className='game-choice';
+    btn.textContent=c.name;
+    btn.onclick=()=>{
+      if(!gameRunning) return;
+      document.querySelectorAll('.game-choice').forEach(b=>b.disabled=true);
+      if(c.name===correct.name){
+        btn.classList.add('correct-ans');
+        gStreak++;
+        gScore += 10 + (gStreak>2 ? gStreak*2 : 0);
+      } else {
+        btn.classList.add('wrong-ans');
+        document.querySelectorAll('.game-choice').forEach(b=>{ if(b.textContent===correct.name) b.classList.add('correct-ans'); });
+        gStreak=0;
+      }
+      document.getElementById('g-score').textContent=gScore;
+      document.getElementById('g-streak').textContent=gStreak;
+      setTimeout(showGameQuestion, 900);
+    };
+    choicesEl.appendChild(btn);
+  });
+}
+
+function endGame() {
+  gameRunning=false;
+  clearInterval(gTimerInt);
+  document.getElementById('shape-display').innerHTML='';
+  document.getElementById('game-choices').innerHTML='';
+  document.getElementById('game-prompt').innerHTML=`<strong style="color:var(--gold);font-size:1.1rem">Game Over! Final Score: ${gScore}</strong><br><span style="color:var(--muted);font-size:.85rem">Best Streak: ${gStreak} 🔥</span>`;
+  const rb = document.createElement('button');
+  rb.className='start-game-btn'; rb.textContent='↺ Play Again';
+  rb.style.marginTop='12px';
+  rb.onclick=startGame;
+  document.getElementById('game-board').appendChild(rb);
+}
+</script>
+</body>
+</html>
